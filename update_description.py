@@ -4,13 +4,19 @@
 import sys
 import os
 from youtube_api import authenticate, update_channel_description, get_subscriber_count
-from ranking_service import format_description
+from ranking_service import track_channel_name, format_description
 
 def main():
     try:
         # Authenticate with YouTube API
         print("🔐 Authenticating with YouTube API...")
         youtube = authenticate()
+        
+        # Track channel name changes
+        print("📌 Tracking channel information...")
+        channel, history = track_channel_name(youtube)
+        current_name = channel['snippet']['title']
+        print(f"✅ Channel: {current_name}")
         
         # Get current subscriber count
         print("📊 Fetching subscriber count...")
@@ -37,6 +43,8 @@ def main():
         
     except Exception as e:
         print(f"❌ Error: {e}")
+        import traceback
+        traceback.print_exc()
         return 1
 
 if __name__ == '__main__':
